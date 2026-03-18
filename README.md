@@ -2,7 +2,7 @@
 
 Code and processed outputs supporting the manuscript:
 
-**“A region-aware bridge modeling framework for spatial characterization of colorectal and breast cancers”**
+**“Region-aware bridge modeling for mesoscale representation of spatial transcriptomic tissue sections”**
 
 ## Overview
 
