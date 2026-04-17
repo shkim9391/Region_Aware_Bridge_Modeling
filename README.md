@@ -23,7 +23,41 @@ The analysis uses two publicly available datasets from the 10x Genomics datasets
 
 Users should download the raw/source data directly from 10x Genomics before running the preprocessing pipeline.
 
-## Script descriptions
+## Repository structure
+
+```text
+repo_root/
+  data/
+    bridge_sample_state_breast_core4_regions4.csv
+    bridge_sample_state_crc_core4_regions4.csv
+    ou_branching_bridge_design_matrix_breast_...
+    ou_branching_bridge_design_matrix_crc_...
+    ou_branching_bridge_input_breast_core4_...
+    ou_branching_bridge_input_crc_breast_...
+    ou_branching_bridge_input_crc_core4_...
+    ou_bridge_standardization_stats_breast_...
+    ou_bridge_standardization_stats_crc_...
+
+  scripts/
+    build_ou_bridge_design_matrix.py
+    build_quadrant_bridge_rows.py
+    build_z_spatial.py
+    evaluate_wsi_to_z.py
+    fit_region_aware_bridge_bayes.py
+    fit_region_aware_bridge_model.py
+    load_breast.py
+    load_crc.py
+    make_patch_index.py
+    merge_ou_branching_bridge_input.py
+    run_within_image_spatial_validation.py
+    scanpy_breast.py
+    scanpy_crc.py
+    train_wsi_to_z.py
+    verification_clusters.py
+    within_image_heterogeneity_metrics_by_...
+    wsi_z_dataset.py
+
+  README.md
 
 ### Data loading and preprocessing
 - `load_crc.py`  
