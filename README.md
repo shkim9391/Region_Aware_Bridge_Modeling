@@ -176,3 +176,8 @@ Because some filenames reflect an earlier development stage, readers should inte
 Manuscript context
 
 This repository accompanies the manuscript on region-aware bridge modeling for mesoscale spatial characterization of colorectal cancer and breast cancer tissue sections.
+
+DOI
+10.5281/zenodo.19619715
+
+[![DOI](https://zenodo.org/badge/1185393573.svg)](https://doi.org/10.5281/zenodo.19619714)
