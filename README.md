@@ -6,178 +6,89 @@ Code and processed outputs supporting the manuscript:
 
 ## Overview
 
-This repository contains the scripts and processed outputs used to build a region-aware bridge-modeling workflow for two public Visium HD spatial transcriptomic tissue sections:
+This repository contains the analysis scripts, processed outputs, and reproducibility materials for a region-aware bridge-modeling workflow applied to public 10x Genomics Visium HD spatial transcriptomic tissue sections.
 
-- one colorectal cancer (**CRC**) section
-- one breast cancer (**BC**) section
+The primary proof-of-concept analysis uses:
 
-The workflow covers dataset loading, preprocessing, spot-level bridge-feature generation, quadrant-level aggregation, standardized design-matrix construction, region-aware ridge modeling, Bayesian regression modeling, and supporting validation analyses.
+- one colorectal cancer (**CRC**) Visium HD section
+- one breast cancer Visium HD section
 
-The repository is organized to support the main manuscript figures and **Supplementary Data S1–S13**.
+The supplementary external applicability analyses use:
 
-## Important note on legacy filenames
+- one lung cancer Visium HD section
+- one prostate cancer Visium HD section
+- one ovarian cancer Visium HD section
 
-Some scripts and output files retain the term `ou_branching` from an earlier internal development stage. In the submitted manuscript, these files are used only for **region-aware bridge-input and design-matrix generation** and **do not represent a separate OU-Branching analysis**.
+The workflow constructs interpretable spot-level or bin-level bridge features, aggregates them into median-quadrant regional summaries, evaluates within-section spatial heterogeneity, performs partition-sensitivity and shuffle-null validation, and fits exploratory ridge and Bayesian sensitivity models on the primary CRC–breast region-level design matrix.
+
+The repository is organized to support the main manuscript, Supplementary Methods, Supplementary Figures S1–S4, and Supplementary Data 1–6.
+
+## Manuscript scope
+
+The primary CRC–breast analysis is a proof-of-concept study. Each primary dataset contains one tissue section, and each section is summarized into four median-quadrant regions. Therefore, the primary statistical design contains eight region-level observations.
+
+Accordingly:
+
+- spatial validation is interpreted as **within-section validation**
+- ridge models are interpreted as **regularized exploratory association models**
+- Bayesian models are interpreted as **uncertainty-aware sensitivity analyses**
+- external lung, prostate, and ovarian cancer analyses are interpreted as **workflow-applicability tests**, not disease-specific validation studies
+
+The framework is intended as a lightweight, reproducible bridge-to-region representation step for spatial transcriptomic analysis.
 
 ## Public data sources
 
-The analysis uses two publicly available datasets from the 10x Genomics datasets portal:
+The original spatial transcriptomic datasets were obtained from the 10x Genomics datasets portal:
 
-- **CRC:** *Visium HD Human Colon Cancer — Gene Expression Library of Colon Cancer (Visium HD) using the Human Whole Transcriptome Probe Set*
-- **BC:** *Visium HD Spatial Gene Expression Library, Human Breast Cancer (Fresh Frozen)*
+<https://www.10xgenomics.com/datasets>
 
-Users should download the original source data directly from 10x Genomics before running the preprocessing pipeline.
+Primary sections:
 
-## Repository structure
+- **CRC:** Visium HD Human Colon Cancer — Gene Expression Library of Colon Cancer using the Human Whole Transcriptome Probe Set
+- **Breast cancer:** Visium HD Spatial Gene Expression Library, Human Breast Cancer (Fresh Frozen)
+
+Supplementary external sections:
+
+- **Lung cancer:** public 10x Genomics Visium HD lung cancer section
+- **Prostate cancer:** public 10x Genomics Visium HD prostate cancer section
+- **Ovarian cancer:** public 10x Genomics Visium HD ovarian cancer section
+
+Users should download the original source data directly from 10x Genomics before rerunning preprocessing steps. This repository provides processed analysis outputs and manuscript-supporting reproducibility materials.
+
+## Repository contents
+
+A cleaned release should contain the following logical components:
 
 ```text
 repo_root/
-  data/
-    bridge_sample_state_breast_core4_regions4.csv
-    bridge_sample_state_crc_core4_regions4.csv
-    ou_branching_bridge_design_matrix_breast_...
-    ou_branching_bridge_design_matrix_crc_...
-    ou_branching_bridge_input_breast_core4_...
-    ou_branching_bridge_input_crc_breast_...
-    ou_branching_bridge_input_crc_core4_...
-    ou_bridge_standardization_stats_breast_...
-    ou_bridge_standardization_stats_crc_...
+  README.md
+  LICENSE
+  requirements.txt or environment.yml
 
   scripts/
-    build_ou_bridge_design_matrix.py
-    build_quadrant_bridge_rows.py
-    build_z_spatial.py
-    evaluate_wsi_to_z.py
-    fit_region_aware_bridge_bayes.py
-    fit_region_aware_bridge_model.py
-    load_breast.py
-    load_crc.py
-    make_patch_index.py
-    merge_ou_branching_bridge_input.py
-    run_within_image_spatial_validation.py
-    scanpy_breast.py
-    scanpy_crc.py
-    train_wsi_to_z.py
-    verification_clusters.py
-    within_image_heterogeneity_metrics_by_...
-    wsi_z_dataset.py
+    bridge_target_construction/
+    patch_index_standardization/
+    region_aware_aggregation/
+    within_section_validation/
+    ridge_modeling/
+    bayesian_sensitivity_modeling/
+    external_applicability/
+    figure_generation/
 
-  README.md
+  supplementary_data/
+    Supplementary_Data_1/
+    Supplementary_Data_2/
+    Supplementary_Data_3/
+    Supplementary_Data_4/
+    Supplementary_Data_5/
+    Supplementary_Data_6/
 
-Script guide
-
-Data loading and preprocessing
-	•	load_crc.py
-Loads the CRC Visium HD dataset and prepares core metadata and spatial coordinates for downstream analysis.
-	•	load_breast.py
-Loads the BC Visium HD dataset and prepares core metadata and spatial coordinates for downstream analysis.
-	•	scanpy_crc.py
-Runs the dataset-specific Scanpy preprocessing workflow for the CRC section.
-	•	scanpy_breast.py
-Runs the dataset-specific Scanpy preprocessing workflow for the BC section.
-	•	verification_clusters.py
-Optional quality-control and exploratory clustering script. This is not required for the core manuscript workflow unless explicitly used in a given analysis.
-
-Spot-level bridge-feature pipeline
-	•	build_z_spatial.py
-Builds the spatial latent or target representations used in bridge-feature modeling.
-	•	make_patch_index.py
-Creates patch-level spatial indexing and coordinate mappings used to connect local spatial units to bridge targets.
-	•	wsi_z_dataset.py
-Constructs the dataset object used for bridge-model training and evaluation.
-	•	train_wsi_to_z.py
-Trains the spot- or patch-level bridge prediction model.
-	•	evaluate_wsi_to_z.py
-Evaluates the trained bridge model and generates predicted bridge features for downstream region-aware analysis.
-
-Region-aware aggregation and matrix construction
-	•	build_quadrant_bridge_rows.py
-Aggregates spot-level bridge predictions into quadrant-level summaries for CRC and BC and exports region-level rows.
-	•	merge_ou_branching_bridge_input.py
-Merges CRC and BC region-level bridge summaries into the joint bridge-input matrices used for downstream analysis.
-Note: the filename is retained for historical reasons.
-	•	build_ou_bridge_design_matrix.py
-Standardizes region-level bridge features and constructs CRC-specific, BC-specific, and joint design matrices.
-Note: the filename is retained for historical reasons.
-
-Region-aware modeling
-	•	fit_region_aware_bridge_model.py
-Fits the region-aware ridge regression models and generates reduced-model selection outputs and coefficient summaries.
-	•	fit_region_aware_bridge_bayes.py
-Fits the Bayesian regression models used for posterior inference on region-level bridge-feature dependencies.
-
-Validation
-	•	run_within_image_spatial_validation.py
-Runs the within-section spatial validation workflow used to assess robustness of the region-aware representation.
-	•	within_image_heterogeneity_metrics_by_...
-Computes heterogeneity metrics across partitioning schemes or related validation summaries, if included in the local workflow.
-
-Supplementary Data mapping
-
-Region-level summaries and design matrices
-	•	S1: CRC regional summary table
-	•	S2: CRC bridge-input matrix
-	•	S3: CRC design matrix
-	•	S4: CRC standardization statistics
-	•	S5: BC regional summary table
-	•	S6: BC bridge-input matrix
-	•	S7: BC design matrix
-	•	S8: BC standardization statistics
-	•	S9: Joint CRC+BC bridge-input matrix
-	•	S10: Joint CRC+BC design matrix
-
-These files are generated primarily from:
-	•	build_quadrant_bridge_rows.py
-	•	merge_ou_branching_bridge_input.py
-	•	build_ou_bridge_design_matrix.py
-
-Validation outputs
-	•	S11: within-section heterogeneity metrics across partitioning schemes
-	•	S12: shuffle-null summary statistics
-	•	S13: raw long-format shuffle-null outputs
-
-These files are generated from the spatial validation workflow, primarily through:
-	•	run_within_image_spatial_validation.py
-	•	associated helper scripts for heterogeneity and null-model summaries, where applicable
-
-Recommended execution order
-
-A typical workflow is:
-	1.	load_crc.py
-	2.	load_breast.py
-	3.	scanpy_crc.py
-	4.	scanpy_breast.py
-	5.	build_z_spatial.py
-	6.	make_patch_index.py
-	7.	wsi_z_dataset.py
-	8.	train_wsi_to_z.py
-	9.	evaluate_wsi_to_z.py
-	10.	build_quadrant_bridge_rows.py
-	11.	merge_ou_branching_bridge_input.py
-	12.	build_ou_bridge_design_matrix.py
-	13.	fit_region_aware_bridge_model.py
-	14.	fit_region_aware_bridge_bayes.py
-	15.	run_within_image_spatial_validation.py
-
-Figures
-	•	Figure 1 is a conceptual workflow figure.
-	•	Figures 2–4 and Supplementary Figures S1–S2 are supported by the processed outputs and model results generated by this repository.
-
-Reproducibility notes
-
-For a clean reproducible release, the repository should include:
-	•	this README.md
-	•	a requirements.txt or environment.yml
-	•	the processed CSV outputs corresponding to Supplementary Data S1–S13
-	•	clear script headers documenting expected inputs and outputs where needed
-
-Because some filenames reflect an earlier development stage, readers should interpret the repository according to the manuscript terminology described above.
-
-Manuscript context
-
-This repository accompanies the manuscript on region-aware bridge modeling for mesoscale spatial characterization of colorectal cancer and breast cancer tissue sections.
-
-DOI
-10.5281/zenodo.19619715
-
-[![DOI](https://zenodo.org/badge/1185393573.svg)](https://doi.org/10.5281/zenodo.19619714)
+  figures/
+    Figure1_revised_region_aware_bridge_workflow.png
+    Figure2_revised_within_section_validation.png
+    Figure3_revised_ridge_exploratory_modeling.png
+    Figure4_revised_bayesian_sensitivity_modeling.png
+    Figure_S1_primary_crc_breast_partitions_heatmaps.png
+    Figure_S2_primary_shuffle_partition_sensitivity.png
+    Figure_S3_external_solid_tumor_heatmaps.png
+    Figure_S4_external_shuffle_partition_sensitivity.png
