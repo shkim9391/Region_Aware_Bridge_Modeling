@@ -63,7 +63,7 @@ A cleaned release should contain the following logical components:
 repo_root/
   README.md
   LICENSE
-  requirements.txt or environment.yml
+  requirements.txt
 
   scripts/
     bridge_target_construction/
