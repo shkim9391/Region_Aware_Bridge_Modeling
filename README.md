@@ -92,3 +92,5 @@ repo_root/
     Figure_S2_primary_shuffle_partition_sensitivity.png
     Figure_S3_external_solid_tumor_heatmaps.png
     Figure_S4_external_shuffle_partition_sensitivity.png
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19801620.svg)](https://doi.org/10.5281/zenodo.19801620)
