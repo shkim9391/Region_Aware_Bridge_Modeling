@@ -1,0 +1,36 @@
+Region_Aware_Bridge_Modeling environment check
+============================================================
+Python version: 3.11.15 | packaged by conda-forge | (main, Mar  5 2026, 16:59:26) [Clang 19.1.7 ]
+Package versions
+------------------------------------------------------------
+numpy: 2.4.3
+pandas: 2.3.3
+matplotlib: 3.10.9
+scipy: 1.17.1
+scikit-learn: 1.8.0
+scanpy: 1.11.5
+anndata: 0.12.11
+torch: 2.10.0
+torchvision: 0.26.0
+pymc: 5.28.4
+arviz: 0.23.4
+pyyaml: 6.0.3
+
+Directory check
+------------------------------------------------------------
+OK: configs
+OK: data_raw/crc
+OK: data_raw/breast
+OK: data_intermediate/crc
+OK: data_intermediate/breast
+OK: outputs/01_bridge_targets
+OK: outputs/02_patch_indices
+OK: outputs/03_model_predictions/checkpoints
+OK: outputs/04_region_summaries
+OK: outputs/05_validation
+OK: outputs/06_design_matrices
+OK: outputs/07_ridge_models
+OK: outputs/08_bayesian_models
+OK: outputs/figures
+OK: outputs/supplementary_tables
+OK: scripts
